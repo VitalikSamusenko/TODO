@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import { TodoList } from "./TodoList";
 import { v1 } from "uuid";
+import { AddItemForm } from "./AddItemForm";
 
 export type FilterValuesType = "all" | "completed" | "active"
 type TodoListType = {
@@ -32,7 +33,7 @@ function App() {
     let task = tasks.find(t => t.id === taskId)
     if (task) {
       task.isDone = isDone
-      setTasks({...tasksObj})
+      setTasks({ ...tasksObj })
     }
   }
 
@@ -48,14 +49,14 @@ function App() {
     let filteredTodoList = todoLists.filter(tl => tl.id !== todoListId)
     setTodoLists(filteredTodoList)
     delete tasksObj[todoListId]
-    setTasks({...tasksObj})
+    setTasks({ ...tasksObj })
   }
 
   let todoListId1 = v1();
   let todoListId2 = v1();
 
   let [todoLists, setTodoLists] = useState<Array<TodoListType>>([
-    { id: todoListId1, title: "What to learn", filter: "active" },
+    { id: todoListId1, title: "What to learn", filter: "all" },
     { id: todoListId2, title: "What to buy", filter: "all" },
   ])
 
@@ -75,8 +76,19 @@ function App() {
     ]
   })
 
+  function addTodoList(title: string) {
+    let todoList: TodoListType = {
+      id: v1(),
+      title: title,
+      filter: "all"
+    }
+    setTodoLists([todoList, ...todoLists])
+    setTasks({...tasksObj, [todoList.id]: []})
+  }
+
   return (
     <div className="App">
+      <AddItemForm addItem={addTodoList} />
       {
         todoLists.map((tl) => {
           let tasksForTodoList = tasksObj[tl.id]
