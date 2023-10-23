@@ -3,6 +3,8 @@ import './App.css';
 import { TaskType, TodoList } from "./TodoList";
 import { v1 } from "uuid";
 import { AddItemForm } from "./AddItemForm";
+import { AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 
 export type FilterValuesType = "all" | "completed" | "active"
 type TodoListType = {
@@ -33,7 +35,7 @@ function App() {
   }
 
   function changeStatus(taskId: string, isDone: boolean, todoListId: string) {
-  let tasks = tasksObj[todoListId]
+    let tasks = tasksObj[todoListId]
     let task = tasks.find(t => t.id === taskId)
     if (task) {
       task.isDone = isDone
@@ -41,7 +43,7 @@ function App() {
     }
   }
   function changeTaskTitle(taskId: string, newTitle: string, todoListId: string) {
-  let tasks = tasksObj[todoListId]
+    let tasks = tasksObj[todoListId]
     let task = tasks.find(t => t.id === taskId)
     if (task) {
       task.title = newTitle
@@ -66,7 +68,7 @@ function App() {
 
   function changeTodolistTitle(id: string, newTitle: string) {
     const todoList = todoLists.find(tl => tl.id === id)
-    if(todoList) {
+    if (todoList) {
       todoList.title = newTitle
       setTodoLists([...todoLists])
     }
@@ -108,32 +110,63 @@ function App() {
 
   return (
     <div className="App">
-      <AddItemForm addItem={addTodoList} />
-      {
-        todoLists.map((tl) => {
-          let tasksForTodoList = tasksObj[tl.id]
-          if (tl.filter === "completed") {
-            tasksForTodoList = tasksForTodoList.filter(t => t.isDone)
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            News
+          </Typography>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+      </AppBar>
+      <Container fixed>
+        <Grid container style={{padding: "20px 0"}}>
+          <AddItemForm addItem={addTodoList} />
+        </Grid>
+        <Grid container spacing={3}>
+          {
+            todoLists.map((tl) => {
+              let tasksForTodoList = tasksObj[tl.id]
+              if (tl.filter === "completed") {
+                tasksForTodoList = tasksForTodoList.filter(t => t.isDone)
+              }
+              if (tl.filter === "active") {
+                tasksForTodoList = tasksForTodoList.filter(t => !t.isDone)
+              }
+              return <Grid item>
+                <Paper style={{padding: "10px 20px"}}>
+                  <TodoList
+                    key={tl.id}
+                    id={tl.id}
+                    title={tl.title}
+                    tasks={tasksForTodoList}
+                    removeTask={removeTask}
+                    changeFilter={changeFilter}
+                    addTask={addTask}
+                    changeTaskStatus={changeStatus}
+                    changeTaskTitle={changeTaskTitle}
+                    filter={tl.filter}
+                    removeTodoList={removeTodoList}
+                    changeTodolistTitle={changeTodolistTitle}
+                  />
+                </Paper>
+
+              </Grid>
+
+            })
           }
-          if (tl.filter === "active") {
-            tasksForTodoList = tasksForTodoList.filter(t => !t.isDone)
-          }
-          return <TodoList
-            key={tl.id}
-            id={tl.id}
-            title={tl.title}
-            tasks={tasksForTodoList}
-            removeTask={removeTask}
-            changeFilter={changeFilter}
-            addTask={addTask}
-            changeTaskStatus={changeStatus}
-            changeTaskTitle={changeTaskTitle}
-            filter={tl.filter}
-            removeTodoList={removeTodoList}
-            changeTodolistTitle={changeTodolistTitle}
-          />
-        })
-      }
+        </Grid>
+
+      </Container>
+
 
     </div>
   );

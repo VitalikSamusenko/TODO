@@ -3,7 +3,7 @@ import { FilterValuesType } from "./App";
 import { AddItemForm } from "./AddItemForm";
 import { EditableSpan } from "./EditableSpan";
 import { Button, Checkbox, IconButton } from "@mui/material";
-import { Delete } from "@mui/icons-material";
+import { Clear, Delete } from "@mui/icons-material";
 
 export type TaskType = {
   id: string
@@ -41,7 +41,7 @@ export function TodoList(props: PropsType) {
     <div>
       <h3><EditableSpan title={props.title} onChange={changeTodoListTitle}/> <IconButton onClick={removeTodoList}><Delete/></IconButton></h3>
       <AddItemForm addItem={addTask}/>
-      <ul>
+      <div>
         {
           props.tasks.map(el => {
             const onRemoveHandler = () => props.removeTask(el.id, props.id)
@@ -50,17 +50,17 @@ export function TodoList(props: PropsType) {
               props.changeTaskTitle(el.id, newValue, props.id)
             }
 
-            return <li key={el.id} className={el.isDone ? "is-done" : ""}>
+            return <div key={el.id} className={el.isDone ? "is-done" : ""}>
               <Checkbox
                 onChange={onChangeStatusHandler}
                 checked={el.isDone} 
                 color={"primary"}/>
               <EditableSpan title={el.title} onChange={onChangeTitleHandler}/>
-              <IconButton onClick={onRemoveHandler}><Delete/></IconButton>
-            </li>
+              <IconButton onClick={onRemoveHandler}><Clear/></IconButton>
+            </div>
           })
         }
-      </ul>
+      </div>
       <div>
         <Button variant={props.filter === "all" ? "contained" : "text"} color={"inherit"} onClick={onAllClickHandler} >All</Button>
         <Button variant={props.filter === "active" ? "contained" : "text"} color={"primary"} onClick={onActiveClickHandler}>Active</Button>
