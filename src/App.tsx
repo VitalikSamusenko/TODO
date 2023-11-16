@@ -18,7 +18,30 @@ export type TasksStateType = {
 }
 
 function App() {
+    let todoListId1 = v1();
+    let todoListId2 = v1();
 
+    let [todoLists, setTodoLists] = useState<Array<TodoListType>>([
+        { id: todoListId1, title: "What to learn", filter: "all" },
+        { id: todoListId2, title: "What to buy", filter: "all" },
+    ])
+
+    let [tasksObj, setTasks] = useState<TasksStateType>({
+        [todoListId1]: [
+            { id: v1(), title: "CSS", isDone: true },
+            { id: v1(), title: "JS", isDone: true },
+            { id: v1(), title: "React", isDone: false },
+            { id: v1(), title: "Redux", isDone: false },
+            { id: v1(), title: "GraphQL", isDone: false },
+        ],
+        [todoListId2]: [
+            { id: v1(), title: "Milk", isDone: true },
+            { id: v1(), title: "Chocolate", isDone: false },
+            { id: v1(), title: "Potatoes", isDone: true },
+            { id: v1(), title: "Water", isDone: false },
+        ]
+    })
+    
     function removeTask(id: string, todoListId: string) {
         let tasks = tasksObj[todoListId]
         let filteredTasks = tasks.filter(el => el.id !== id)
@@ -73,30 +96,6 @@ function App() {
             setTodoLists([...todoLists])
         }
     }
-
-    let todoListId1 = v1();
-    let todoListId2 = v1();
-
-    let [todoLists, setTodoLists] = useState<Array<TodoListType>>([
-        { id: todoListId1, title: "What to learn", filter: "all" },
-        { id: todoListId2, title: "What to buy", filter: "all" },
-    ])
-
-    let [tasksObj, setTasks] = useState<TasksStateType>({
-        [todoListId1]: [
-            { id: v1(), title: "CSS", isDone: true },
-            { id: v1(), title: "JS", isDone: true },
-            { id: v1(), title: "React", isDone: false },
-            { id: v1(), title: "Redux", isDone: false },
-            { id: v1(), title: "GraphQL", isDone: false },
-        ],
-        [todoListId2]: [
-            { id: v1(), title: "Milk", isDone: true },
-            { id: v1(), title: "Chocolate", isDone: false },
-            { id: v1(), title: "Potatoes", isDone: true },
-            { id: v1(), title: "Water", isDone: false },
-        ]
-    })
 
     function addTodoList(title: string) {
         let todoList: TodoListType = {
