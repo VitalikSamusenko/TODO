@@ -1,5 +1,5 @@
 import { TasksStateType } from "../App"
-import { addTaskAC, removeTaskAC, tasksReducer } from "./tasks-reducer"
+import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer } from "./tasks-reducer"
 
 test('correct task should be deleted from correct array', () => {
     const startState: TasksStateType = {
@@ -47,4 +47,46 @@ test('correct task should be added to correct array', () => {
     expect(endState['todolistId2'][0].id).toBeDefined()
     expect(endState['todolistId2'][0].title).toBe('Juice')
     expect(endState['todolistId2'][0].isDone).toBeFalsy()
+})
+
+test('status of specified task should be changed', () => {
+    const startState: TasksStateType = {
+        'todolistId1': [
+            { id: '1', title: "CSS", isDone: true },
+            { id: '2', title: "JS", isDone: true },
+            { id: '3', title: "React", isDone: false }
+        ],
+        'todolistId2': [
+            { id: '1', title: "Milk", isDone: true },
+            { id: '2', title: "Chocolate", isDone: true },
+            { id: '3', title: "Potatoes", isDone: true }
+        ]
+    }
+
+    const action = changeTaskStatusAC('2', false, 'todolistId2')
+    const endState = tasksReducer(startState, action)
+
+    expect(endState['todolistId2'][1].isDone).toBe(false)
+    expect(endState['todolistId1'][1].isDone).toBe(true)
+})
+
+test('title of specified task should be changed', () => {
+    const startState: TasksStateType = {
+        'todolistId1': [
+            { id: '1', title: "CSS", isDone: true },
+            { id: '2', title: "JS", isDone: true },
+            { id: '3', title: "React", isDone: false }
+        ],
+        'todolistId2': [
+            { id: '1', title: "Milk", isDone: true },
+            { id: '2', title: "Chocolate", isDone: true },
+            { id: '3', title: "Potatoes", isDone: true }
+        ]
+    }
+
+    const action = changeTaskTitleAC('2', 'Cucumber', 'todolistId2')
+    const endState = tasksReducer(startState, action)
+
+    expect(endState['todolistId2'][1].title).toBe('Cucumber')
+    expect(endState['todolistId1'][1].title).toBe('JS')
 })
